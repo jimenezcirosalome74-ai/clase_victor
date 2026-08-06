@@ -77,7 +77,43 @@ df_consolidado =pd.concat(lista_informes, ignore_index =True)
 # 4. Asegurar exactamente las 7 columnas y eliminar duplicadas/extra
 df_consolidado = df_consolidado[columnas_finales]
 
-print("\n--- CONSOLIDACIÓN EXITOSA ---")
+print("\n--- CONSOLIDACIÓN INICIAL ---")
+print(df_consolidado.info())
+
+# --------------------------------------------
+# PARTE 4: Limpieza de datos (NUEVO)
+# --------------------------------------------
+
+# 4a. Eliminar filas duplicadas
+filas_antes = len(df_consolidado)
+df_consolidado = df_consolidado.drop_duplicates()
+print(f"\nFilas antes: {filas_antes} - despues: {len(df_consolidado)}")
+
+# 4b. Explorar valores nulos ANTES de decidir qué hacer
+print("\nValores nulos por columna (ANTES):")
+print(df_consolidado.isnull().sum())
+
+# 4c. Rellenar según el tipo de columna
+# Estrategia de imputación recomendada según el tipo de dato:
+valores_imputacion = {
+    # Categóricas / Texto -> 'Sin Información' o 'Desconocido'
+    "producto": "Desconocido",
+    "categoria": "Sin Categoría",
+    "vendedor": "Sin Asignar",
+    "metodo_pago": "No Especificado",
+    # Numéricas -> 0 o el valor promedio/mediana
+    "cantidad": 0,
+    "precio_unitario": 0,
+    # Fechas -> Conservar o rellenar con un valor por defecto si aplica
+    "fecha": "Sin Fecha",
+}
+
+# Aplicar el rellenado de nulos
+df_consolidado = df_consolidado.fillna(valores_imputacion)
+
+# Verificación final
+print("\nValores nulos por columna (DESPUÉS):")
+print(df_consolidado.isnull().sum())
+
+print("\n--- DATAFRAME CONSOLIDADO Y LIMPIO ---")
 print(df_consolidado.head())
-print(f"\nCantidad total de columnas: {len(df_consolidado.columns)}")
-print(f"Nombres de columnas: {list(df_consolidado.columns)}")
