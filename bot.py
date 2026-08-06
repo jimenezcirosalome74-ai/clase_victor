@@ -117,3 +117,8 @@ print(df_consolidado.isnull().sum())
 
 print("\n--- DATAFRAME CONSOLIDADO Y LIMPIO ---")
 print(df_consolidado.head())
+# --------------------------------------------
+# PARTE 5: Guardar el resultado
+# --------------------------------------------
+df_consolidado.to_excel("consolidado_limpio.xlsx", index=False)
+print("Archivo guardado")
